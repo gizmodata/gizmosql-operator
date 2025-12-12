@@ -1,0 +1,7 @@
+apiVersion: v2
+name: gizmosql-operator
+description: A Helm chart to distribute the project gizmosql-operator
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+icon: "https://gizmodata.com/gizmodata-logo.png"

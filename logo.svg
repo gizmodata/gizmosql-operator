@@ -1,0 +1,120 @@
+<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Full page pond background -->
+  <rect x="0" y="0" width="400" height="400" fill="#87CEEB" opacity="0.3"/>
+  <rect x="0" y="0" width="400" height="400" fill="#4A9FD8" opacity="0.3"/>
+  <rect x="0" y="0" width="400" height="400" fill="#2E8BC0" opacity="0.4"/>
+  
+  <!-- Water ripples -->
+  <ellipse cx="120" cy="200" rx="30" ry="8" fill="none" stroke="#5DADE2" stroke-width="2" opacity="0.4"/>
+  <ellipse cx="280" cy="240" rx="25" ry="6" fill="none" stroke="#5DADE2" stroke-width="2" opacity="0.4"/>
+  <ellipse cx="200" cy="320" rx="20" ry="5" fill="none" stroke="#5DADE2" stroke-width="2" opacity="0.4"/>
+  <ellipse cx="90" cy="150" rx="22" ry="6" fill="none" stroke="#5DADE2" stroke-width="2" opacity="0.4"/>
+  <ellipse cx="320" cy="180" rx="28" ry="7" fill="none" stroke="#5DADE2" stroke-width="2" opacity="0.4"/>
+  
+  <!-- Lily pads -->
+  <ellipse cx="90" cy="280" rx="25" ry="20" fill="#2E7D32" opacity="0.6"/>
+  <path d="M 90 280 L 100 275" stroke="#1B5E20" stroke-width="2" fill="none"/>
+  
+  <ellipse cx="330" cy="220" rx="20" ry="16" fill="#2E7D32" opacity="0.6"/>
+  <path d="M 330 220 L 338 216" stroke="#1B5E20" stroke-width="2" fill="none"/>
+  
+  <ellipse cx="60" cy="100" rx="22" ry="18" fill="#2E7D32" opacity="0.6"/>
+  <path d="M 60 100 L 68 96" stroke="#1B5E20" stroke-width="2" fill="none"/>
+  
+  <!-- Large parent duck (mama duck) -->
+  <g transform="translate(200, 180)">
+    <!-- Body -->
+    <ellipse cx="0" cy="0" rx="28" ry="22" fill="#FFD54F"/>
+    <!-- Head -->
+    <circle cx="-15" cy="-18" r="16" fill="#FFD54F"/>
+    <!-- Beak -->
+    <path d="M -28 -18 L -35 -18 L -32 -15 Z" fill="#FF6F00"/>
+    <!-- Eye -->
+    <circle cx="-18" cy="-20" r="3" fill="#000"/>
+    <circle cx="-17" cy="-21" r="1" fill="#FFF"/>
+    <!-- Wing -->
+    <path d="M -8 -5 Q 5 0 8 8" stroke="#F9A825" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <!-- Tail -->
+    <path d="M 20 2 Q 30 0 32 -5" stroke="#F9A825" stroke-width="4" fill="none" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Medium duckling 1 -->
+  <g transform="translate(150, 220)">
+    <ellipse cx="0" cy="0" rx="18" ry="14" fill="#FFF176"/>
+    <circle cx="-10" cy="-12" r="10" fill="#FFF176"/>
+    <path d="M -18 -12 L -23 -12 L -21 -10 Z" fill="#FF8F00"/>
+    <circle cx="-12" cy="-14" r="2" fill="#000"/>
+    <circle cx="-11.5" cy="-14.5" r="0.7" fill="#FFF"/>
+    <path d="M 12 2 Q 18 0 19 -3" stroke="#FFD54F" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Medium duckling 2 -->
+  <g transform="translate(250, 200)">
+    <ellipse cx="0" cy="0" rx="18" ry="14" fill="#FFF176"/>
+    <circle cx="-10" cy="-12" r="10" fill="#FFF176"/>
+    <path d="M -18 -12 L -23 -12 L -21 -10 Z" fill="#FF8F00"/>
+    <circle cx="-12" cy="-14" r="2" fill="#000"/>
+    <circle cx="-11.5" cy="-14.5" r="0.7" fill="#FFF"/>
+    <path d="M 12 2 Q 18 0 19 -3" stroke="#FFD54F" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Small duckling 1 -->
+  <g transform="translate(180, 250)">
+    <ellipse cx="0" cy="0" rx="12" ry="10" fill="#FFF9C4"/>
+    <circle cx="-6" cy="-8" r="7" fill="#FFF9C4"/>
+    <path d="M -12 -8 L -15 -8 L -14 -6.5 Z" fill="#FFB300"/>
+    <circle cx="-8" cy="-9.5" r="1.5" fill="#000"/>
+    <circle cx="-7.7" cy="-10" r="0.5" fill="#FFF"/>
+    <path d="M 8 1 Q 12 0 13 -2" stroke="#FFF176" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Small duckling 2 -->
+  <g transform="translate(220, 240)">
+    <ellipse cx="0" cy="0" rx="12" ry="10" fill="#FFF9C4"/>
+    <circle cx="-6" cy="-8" r="7" fill="#FFF9C4"/>
+    <path d="M -12 -8 L -15 -8 L -14 -6.5 Z" fill="#FFB300"/>
+    <circle cx="-8" cy="-9.5" r="1.5" fill="#000"/>
+    <circle cx="-7.7" cy="-10" r="0.5" fill="#FFF"/>
+    <path d="M 8 1 Q 12 0 13 -2" stroke="#FFF176" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Tiny duckling 1 -->
+  <g transform="translate(160, 270)">
+    <ellipse cx="0" cy="0" rx="9" ry="7" fill="#FFFDE7"/>
+    <circle cx="-4" cy="-6" r="5" fill="#FFFDE7"/>
+    <path d="M -8 -6 L -10 -6 L -9.5 -5 Z" fill="#FFB300"/>
+    <circle cx="-5.5" cy="-7" r="1.2" fill="#000"/>
+    <circle cx="-5.3" cy="-7.3" r="0.4" fill="#FFF"/>
+    <path d="M 6 0.5 Q 9 0 9.5 -1.5" stroke="#FFF9C4" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Tiny duckling 2 -->
+  <g transform="translate(240, 265)">
+    <ellipse cx="0" cy="0" rx="9" ry="7" fill="#FFFDE7"/>
+    <circle cx="-4" cy="-6" r="5" fill="#FFFDE7"/>
+    <path d="M -8 -6 L -10 -6 L -9.5 -5 Z" fill="#FFB300"/>
+    <circle cx="-5.5" cy="-7" r="1.2" fill="#000"/>
+    <circle cx="-5.3" cy="-7.3" r="0.4" fill="#FFF"/>
+    <path d="M 6 0.5 Q 9 0 9.5 -1.5" stroke="#FFF9C4" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Tiny duckling 3 -->
+  <g transform="translate(200, 285)">
+    <ellipse cx="0" cy="0" rx="9" ry="7" fill="#FFFDE7"/>
+    <circle cx="-4" cy="-6" r="5" fill="#FFFDE7"/>
+    <path d="M -8 -6 L -10 -6 L -9.5 -5 Z" fill="#FFB300"/>
+    <circle cx="-5.5" cy="-7" r="1.2" fill="#000"/>
+    <circle cx="-5.3" cy="-7.3" r="0.4" fill="#FFF"/>
+    <path d="M 6 0.5 Q 9 0 9.5 -1.5" stroke="#FFF9C4" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Additional tiny duckling 4 -->
+  <g transform="translate(130, 190)">
+    <ellipse cx="0" cy="0" rx="9" ry="7" fill="#FFFDE7"/>
+    <circle cx="-4" cy="-6" r="5" fill="#FFFDE7"/>
+    <path d="M -8 -6 L -10 -6 L -9.5 -5 Z" fill="#FFB300"/>
+    <circle cx="-5.5" cy="-7" r="1.2" fill="#000"/>
+    <circle cx="-5.3" cy="-7.3" r="0.4" fill="#FFF"/>
+    <path d="M 6 0.5 Q 9 0 9.5 -1.5" stroke="#FFF9C4" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  </g>
+</svg>

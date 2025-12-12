@@ -1,0 +1,60 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+    name: gizmosql-operator-manager-role
+rules:
+    - apiGroups:
+        - ""
+      resources:
+        - events
+      verbs:
+        - create
+        - patch
+    - apiGroups:
+        - ""
+      resources:
+        - services
+      verbs:
+        - create
+        - delete
+        - list
+        - patch
+        - update
+        - watch
+    - apiGroups:
+        - apps
+      resources:
+        - statefulsets
+      verbs:
+        - create
+        - delete
+        - list
+        - patch
+        - update
+        - watch
+    - apiGroups:
+        - gizmodata.com
+      resources:
+        - duckdbs
+      verbs:
+        - create
+        - delete
+        - get
+        - list
+        - patch
+        - update
+        - watch
+    - apiGroups:
+        - gizmodata.com
+      resources:
+        - duckdbs/finalizers
+      verbs:
+        - update
+    - apiGroups:
+        - gizmodata.com
+      resources:
+        - duckdbs/status
+      verbs:
+        - get
+        - patch
+        - update

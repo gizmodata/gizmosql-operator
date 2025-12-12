@@ -1,0 +1,9 @@
+apiVersion: gizmodata.com/v1alpha1
+kind: DuckDB
+metadata:
+  labels:
+    app.kubernetes.io/name: gizmosql-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: duckdb-sample
+spec:
+  # TODO(user): Add fields here
