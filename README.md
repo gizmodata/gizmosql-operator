@@ -2,136 +2,161 @@
   <img src="logo.svg" alt="gizmosql-operator logo" width="200"/>
 </p>
 
-# GizmoGizmoSQL Kubernetes Operator
+# ☸️ GizmoSQL Kubernetes Operator
 
-## Description
+[![DockerHub](https://img.shields.io/badge/dockerhub-image-green.svg?logo=Docker)](https://hub.docker.com/r/gizmodata/gizmosql-operator)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-## Getting Started
+---
+
+## 🌟 What is the GizmoSQL Operator?
+
+The **GizmoSQL Operator** is a Kubernetes controller that manages the lifecycle of [GizmoSQL](https://github.com/gizmodata/gizmosql) instances on Kubernetes. It simplifies the deployment, scaling, and management of high-performance SQL servers powered by DuckDB.
+
+---
+
+## 🧠 Why use the Operator?
+
+- 🤖 **Automated Lifecycle** — Easily provision and manage GizmoSQL instances as Kubernetes Custom Resources.
+- ⚙️ **Configuration Management** — Declarative configuration for your SQL engines.
+- 🚀 **Scalable Deployments** — Deploy multiple isolated instances with ease.
+- ☁️ **Cloud Native** — Integrates with Kubernetes RBAC, networking, and storage.
+
+---
+
+## 🚀 Quick Start
 
 ### Prerequisites
-- go version v1.24.0+
-- docker version 17.03+.
-- kubectl version v1.11.3+.
-- Access to a Kubernetes v1.11.3+ cluster.
 
-### To Deploy on the cluster
-**Build and push your image to the location specified by `IMG`:**
+- Kubernetes cluster (v1.11.3+)
+- `kubectl` configured
+- `helm` (v3+)
 
-```sh
-make docker-build docker-push IMG=<some-registry>/gizmosql-operator:tag
+### Installation via Helm
+
+1. **Clone the Repository**
+
+   ```bash
+   git clone https://github.com/gizmodata/gizmosql-operator.git
+   cd operator
+   ```
+
+2. **Install the Chart**
+
+   Install the operator into the `gizmosql-system` namespace:
+
+   ```bash
+   helm install gizmosql-operator ./chart \
+     --namespace gizmosql-system \
+     --create-namespace
+   ```
+
+3. **Verify Installation**
+
+   Ensure the operator pod is running:
+
+   ```bash
+   kubectl get pods -n gizmosql-system
+   ```
+
+---
+
+## 📦 Usage
+
+Once the operator is running, you can deploy a GizmoSQL instance by creating a `DuckDB` custom resource.
+
+### 1. Create a Manifest
+
+Create a file named `gizmosql-instance.yaml`:
+
+```yaml
+apiVersion: gizmodata.com/v1alpha1
+kind: DuckDB
+metadata:
+  name: example-gizmosql
+  namespace: default
+spec:
+  image:
+    repository: gizmodata/gizmosql
+    tag: latest
+  port: 31337
+  resources:
+    limits:
+      cpu: "1"
+      memory: "2Gi"
+    requests:
+      cpu: "500m"
+      memory: "1Gi"
 ```
 
-**NOTE:** This image ought to be published in the personal registry you specified.
-And it is required to have access to pull the image from the working environment.
-Make sure you have the proper permission to the registry if the above commands don’t work.
+### 2. Apply the Manifest
 
-**Install the CRDs into the cluster:**
-
-```sh
-make install
+```bash
+kubectl apply -f gizmosql-instance.yaml
 ```
 
-**Deploy the Manager to the cluster with the image specified by `IMG`:**
+### 3. Connect
 
-```sh
-make deploy IMG=<some-registry>/gizmosql-operator:tag
+The operator will create a Service for your instance. You can forward the port to connect locally:
+
+```bash
+kubectl port-forward svc/example-gizmosql 31337:31337
 ```
 
-> **NOTE**: If you encounter RBAC errors, you may need to grant yourself cluster-admin
-privileges or be logged in as admin.
+Then connect using the GizmoSQL client or any Arrow Flight SQL compatible client (JDBC, Python, etc.).
 
-**Create instances of your solution**
-You can apply the samples (examples) from the config/sample:
+---
 
-```sh
-kubectl apply -k config/samples/
+## 🛠 Configuration
+
+The Helm chart can be configured via `values.yaml` or `--set` flags during installation.
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `manager.image.repository` | Controller image repository | `gizmodata/gizmosql-operator` |
+| `manager.image.tag` | Controller image tag | `0.1.0` |
+| `manager.replicas` | Number of operator replicas | `1` |
+| `crd.enable` | Whether to install CRDs | `true` |
+| `metrics.enable` | Enable metrics endpoint | `true` |
+
+---
+
+## 🏗️ Build from Source
+
+For developers who want to build and deploy the operator from source:
+
+```bash
+# Build the docker image
+make docker-build IMG=myregistry/gizmosql-operator:tag
+
+# Push the image
+make docker-push IMG=myregistry/gizmosql-operator:tag
+
+# Deploy via Helm with your custom image
+helm install gizmosql-operator ./chart \
+  --set manager.image.repository=myregistry/gizmosql-operator \
+  --set manager.image.tag=tag
 ```
 
->**NOTE**: Ensure that the samples has default values to test it out.
+---
 
-### To Uninstall
-**Delete the instances (CRs) from the cluster:**
+## 🔒 License
 
-```sh
-kubectl delete -k config/samples/
+
+```
+Apache License, Version 2.0
+https://www.apache.org/licenses/LICENSE-2.0
 ```
 
-**Delete the APIs(CRDs) from the cluster:**
+---
 
-```sh
-make uninstall
-```
+## 📫 Contact
 
-**UnDeploy the controller from the cluster:**
+Questions or consulting needs?
 
-```sh
-make undeploy
-```
+📧 info@gizmodata.com  
+🌐 [https://gizmodata.com](https://gizmodata.com)
 
-## Project Distribution
+---
 
-Following the options to release and provide this solution to the users.
-
-### By providing a bundle with all YAML files
-
-1. Build the installer for the image built and published in the registry:
-
-```sh
-make build-installer IMG=<some-registry>/gizmosql-operator:tag
-```
-
-**NOTE:** The makefile target mentioned above generates an 'install.yaml'
-file in the dist directory. This file contains all the resources built
-with Kustomize, which are necessary to install this project without its
-dependencies.
-
-2. Using the installer
-
-Users can just run 'kubectl apply -f <URL for YAML BUNDLE>' to install
-the project, i.e.:
-
-```sh
-kubectl apply -f https://raw.githubusercontent.com/<org>/gizmosql-operator/<tag or branch>/dist/install.yaml
-```
-
-### By providing a Helm Chart
-
-1. Build the chart using the optional helm plugin
-
-```sh
-operator-sdk edit --plugins=helm/v1-alpha
-```
-
-2. See that a chart was generated under 'dist/chart', and users
-can obtain this solution from there.
-
-**NOTE:** If you change the project, you need to update the Helm Chart
-using the same command above to sync the latest changes. Furthermore,
-if you create webhooks, you need to use the above command with
-the '--force' flag and manually ensure that any custom configuration
-previously added to 'dist/chart/values.yaml' or 'dist/chart/manager/manager.yaml'
-is manually re-applied afterwards.
-
-## Contributing
-// TODO(user): Add detailed information on how you would like others to contribute to this project
-
-**NOTE:** Run `make help` for more information on all potential `make` targets
-
-More information can be found via the [Kubebuilder Documentation](https://book.kubebuilder.io/introduction.html)
-
-## License
-
-Copyright 2025.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
+> Built with ❤️ by [GizmoData™](https://gizmodata.com)

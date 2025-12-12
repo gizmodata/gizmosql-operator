@@ -12,7 +12,7 @@ plugins:
   manifests.sdk.operatorframework.io/v2: {}
   scorecard.sdk.operatorframework.io/v2: {}
 projectName: gizmosql-operator
-repo: github.com/gizmodata/operator
+repo: github.com/gizmodata/gizmosql-operator
 resources:
 - api:
     crdVersion: v1
@@ -21,6 +21,6 @@ resources:
   domain: gizmodata.com
   group: engines
   kind: DuckDB
-  path: github.com/gizmodata/operator/api/v1alpha1
+  path: github.com/gizmodata/gizmosql-operator/api/v1alpha1
   version: v1alpha1
 version: "3"

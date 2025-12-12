@@ -1,4 +1,4 @@
-module github.com/gizmodata/operator
+module github.com/gizmodata/gizmosql-operator
 
 go 1.24.0
 

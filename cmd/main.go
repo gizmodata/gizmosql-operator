@@ -37,8 +37,8 @@ import (
 	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 
-	v1alpha1 "github.com/gizmodata/operator/api/v1alpha1"
-	"github.com/gizmodata/operator/internal/controller"
+	v1alpha1 "github.com/gizmodata/gizmosql-operator/api/v1alpha1"
+	"github.com/gizmodata/gizmosql-operator/internal/controller"
 	// +kubebuilder:scaffold:imports
 )
 

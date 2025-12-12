@@ -3,8 +3,8 @@ manager:
   replicas: 1
   
   image:
-    repository: gizmodata/operator
-    tag: 0.0.1
+    repository: gizmodata/gizmosql-operator
+    tag: 0.1.0
     pullPolicy: IfNotPresent
 
   # Arguments

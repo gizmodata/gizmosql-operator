@@ -35,7 +35,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 
-	v1alpha1 "github.com/gizmodata/operator/api/v1alpha1"
+	v1alpha1 "github.com/gizmodata/gizmosql-operator/api/v1alpha1"
 )
 
 const duckdbFinalizer = "gizmodata.com/finalizer"
