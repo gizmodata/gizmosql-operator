@@ -36,7 +36,7 @@ type GizmoSQLServerSpec struct {
 	// +optional
 	Port int32 `json:"port,omitempty" default:"31337"`
 
-	// Authentication configuration.
+	// Authentication configuration. If no secretRef is provided, the GizmoSQLServer will use a default username of "gizmosql_username" and password of "gizmosql_password".
 	Auth GizmoSQLServerAuth `json:"auth,omitempty"`
 
 	Resources corev1.ResourceRequirements `json:"resources,omitempty"`
@@ -57,8 +57,10 @@ type GizmoSQLServerImage struct {
 	PullPolicy corev1.PullPolicy `json:"pullPolicy,omitempty" default:"Always"`
 }
 
+// GizmoSQLServerAuth defines the authentication configuration for the GizmoSQLServer.
 type GizmoSQLServerAuth struct {
 	SecretRef   corev1.SecretReference `json:"secretRef,omitempty"`
+	UsernameKey string                 `json:"usernameKey,omitempty"`
 	PasswordKey string                 `json:"passwordKey,omitempty"`
 }
 

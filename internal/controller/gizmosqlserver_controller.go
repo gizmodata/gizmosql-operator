@@ -287,33 +287,40 @@ func (r *GizmoSQLServerReconciler) statefulSetForGizmoSQLServer(
 		}
 	}
 
-	if gizmoSQLServer.Name == "" {
-		// Generate a random kubernetes-friendly suffix for the name, e.g. 5-7 lowercase letters/numbers
-		const nameSuffixLength = 6
-		const letterBytes = "abcdefghijklmnopqrstuvwxyz0123456789"
-		var suffix = make([]byte, nameSuffixLength)
-		for i := range suffix {
-			suffix[i] = letterBytes[time.Now().UnixNano()%int64(len(letterBytes))]
-		}
-		gizmoSQLServer.Name = fmt.Sprintf("gizmosqlserver-%s", string(suffix))
-	}
-
 	auth := gizmoSQLServer.Spec.Auth
 	envVars := []corev1.EnvVar{}
 	if auth.SecretRef.Name != "" {
-		envVars = append(envVars, corev1.EnvVar{
-			ValueFrom: &corev1.EnvVarSource{
-				SecretKeyRef: &corev1.SecretKeySelector{
-					LocalObjectReference: corev1.LocalObjectReference{Name: auth.SecretRef.Name},
-					Key:                  auth.PasswordKey,
+		envVars = append(envVars,
+			corev1.EnvVar{
+				Name: "GIZMOSQL_USERNAME",
+				ValueFrom: &corev1.EnvVarSource{
+					SecretKeyRef: &corev1.SecretKeySelector{
+						LocalObjectReference: corev1.LocalObjectReference{Name: auth.SecretRef.Name},
+						Key:                  auth.UsernameKey,
+					},
 				},
 			},
-		})
+			corev1.EnvVar{
+				Name: "GIZMOSQL_PASSWORD",
+				ValueFrom: &corev1.EnvVarSource{
+					SecretKeyRef: &corev1.SecretKeySelector{
+						LocalObjectReference: corev1.LocalObjectReference{Name: auth.SecretRef.Name},
+						Key:                  auth.PasswordKey,
+					},
+				},
+			},
+		)
 	} else {
-		envVars = append(envVars, corev1.EnvVar{
-			Name:  "GIZMOSQL_PASSWORD",
-			Value: "gizmosql_password",
-		})
+		envVars = append(envVars,
+			corev1.EnvVar{
+				Name:  "GIZMOSQL_USERNAME",
+				Value: "gizmosql_username",
+			},
+			corev1.EnvVar{
+				Name:  "GIZMOSQL_PASSWORD",
+				Value: "gizmosql_password",
+			},
+		)
 	}
 
 	statefulSet := &appsv1.StatefulSet{

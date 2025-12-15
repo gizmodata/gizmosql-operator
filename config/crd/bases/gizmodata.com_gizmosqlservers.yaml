@@ -953,7 +953,9 @@ spec:
                     type: object
                 type: object
               auth:
-                description: Authentication configuration.
+                description: Authentication configuration. If no secretRef is provided,
+                  the GizmoSQLServer will use a default username of "gizmosql_username"
+                  and password of "gizmosql_password".
                 properties:
                   passwordKey:
                     type: string
@@ -972,6 +974,8 @@ spec:
                         type: string
                     type: object
                     x-kubernetes-map-type: atomic
+                  usernameKey:
+                    type: string
                 type: object
               image:
                 description: Repository and tag of the GizmoSQLServer image to use.
