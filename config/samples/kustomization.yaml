@@ -1,4 +1,4 @@
 ## Append samples of your project ##
 resources:
-- engines_v1alpha1_duckdb.yaml
+- gizmodata_v1alpha1_gizmosqlserver.yaml
 # +kubebuilder:scaffold:manifestskustomizesamples

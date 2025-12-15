@@ -24,50 +24,50 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-// DuckDBSpec defines the desired state of DuckDB.
+// GizmoSQLServerSpec defines the desired state of GizmoSQLServer.
 // +kubebuilder:subresource:status
-type DuckDBSpec struct {
+type GizmoSQLServerSpec struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Repository and tag of the DuckDB image to use.
-	Image DuckDBImage `json:"image,omitempty"`
+	// Repository and tag of the GizmoSQLServer image to use.
+	Image GizmoSQLServerImage `json:"image,omitempty"`
 
 	// Port defines the port to expose. Default is typically 31337 or similar for gizmosql.
 	// +optional
 	Port int32 `json:"port,omitempty" default:"31337"`
 
 	// Authentication configuration.
-	Auth DuckDBAuth `json:"auth,omitempty"`
+	Auth GizmoSQLServerAuth `json:"auth,omitempty"`
 
 	Resources corev1.ResourceRequirements `json:"resources,omitempty"`
 
-	// NodeSelector defines the node selector for the DuckDB instance.
+	// NodeSelector defines the node selector for the GizmoSQLServer instance.
 	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
 
-	// Affinity defines the affinity for the DuckDB instance.
+	// Affinity defines the affinity for the GizmoSQLServer instance.
 	Affinity *corev1.Affinity `json:"affinity,omitempty"`
 
-	// Tolerations defines the tolerations for the DuckDB instance.
+	// Tolerations defines the tolerations for the GizmoSQLServer instance.
 	Tolerations []corev1.Toleration `json:"tolerations,omitempty"`
 }
 
-type DuckDBImage struct {
+type GizmoSQLServerImage struct {
 	Repository string            `json:"repository,omitempty"`
 	Tag        string            `json:"tag,omitempty"`
 	PullPolicy corev1.PullPolicy `json:"pullPolicy,omitempty" default:"Always"`
 }
 
-type DuckDBAuth struct {
+type GizmoSQLServerAuth struct {
 	SecretRef   corev1.SecretReference `json:"secretRef,omitempty"`
 	PasswordKey string                 `json:"passwordKey,omitempty"`
 }
 
-// DuckDBStatus defines the observed state of DuckDB.
-type DuckDBStatus struct {
+// GizmoSQLServerStatus defines the observed state of GizmoSQLServer.
+type GizmoSQLServerStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Conditions store the status conditions of the DuckDB instances
+	// Conditions store the status conditions of the GizmoSQLServer instances
 	// +operator-sdk:csv:customresourcedefinitions:type=status
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,1,rep,name=conditions"`
 }
@@ -75,24 +75,24 @@ type DuckDBStatus struct {
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 
-// DuckDB is the Schema for the duckdbs API.
-type DuckDB struct {
+// GizmoSQLServer is the Schema for the gizmosqlservers API.
+type GizmoSQLServer struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   DuckDBSpec   `json:"spec,omitempty"`
-	Status DuckDBStatus `json:"status,omitempty"`
+	Spec   GizmoSQLServerSpec   `json:"spec,omitempty"`
+	Status GizmoSQLServerStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 
-// DuckDBList contains a list of DuckDB.
-type DuckDBList struct {
+// GizmoSQLServerList contains a list of GizmoSQLServer.
+type GizmoSQLServerList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []DuckDB `json:"items"`
+	Items           []GizmoSQLServer `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&DuckDB{}, &DuckDBList{})
+	SchemeBuilder.Register(&GizmoSQLServer{}, &GizmoSQLServerList{})
 }

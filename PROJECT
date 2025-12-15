@@ -20,7 +20,7 @@ resources:
   controller: true
   domain: gizmodata.com
   group: engines
-  kind: DuckDB
+  kind: GizmoSQLServer
   path: github.com/gizmodata/gizmosql-operator/api/v1alpha1
   version: v1alpha1
 version: "3"

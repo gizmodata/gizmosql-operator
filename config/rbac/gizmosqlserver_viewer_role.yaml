@@ -1,9 +1,9 @@
 # This rule is not used by the project gizmosql-operator itself.
 # It is provided to allow the cluster admin to help manage permissions for users.
 #
-# Grants permissions to create, update, and delete resources within the gizmodata.com.
-# This role is intended for users who need to manage these resources
-# but should not control RBAC or manage permissions for others.
+# Grants read-only access to gizmodata.com resources.
+# This role is intended for users who need visibility into these resources
+# without permissions to modify them. It is ideal for monitoring purposes and limited-access viewing.
 
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -11,23 +11,20 @@ metadata:
   labels:
     app.kubernetes.io/name: gizmosql-operator
     app.kubernetes.io/managed-by: kustomize
-  name: duckdb-editor-role
+  name: gizmosqlserver-viewer-role
 rules:
 - apiGroups:
   - gizmodata.com
   resources:
-  - duckdbs
+  - gizmosqlservers
   verbs:
-  - create
-  - delete
   - get
   - list
-  - patch
-  - update
   - watch
 - apiGroups:
   - gizmodata.com
   resources:
-  - duckdbs/status
+  - gizmosqlservers/status
   verbs:
   - get
+

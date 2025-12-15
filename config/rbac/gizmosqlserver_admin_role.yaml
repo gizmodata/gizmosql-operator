@@ -11,17 +11,18 @@ metadata:
   labels:
     app.kubernetes.io/name: gizmosql-operator
     app.kubernetes.io/managed-by: kustomize
-  name: duckdb-admin-role
+  name: gizmosqlserver-admin-role
 rules:
 - apiGroups:
   - gizmodata.com
   resources:
-  - duckdbs
+  - gizmosqlservers
   verbs:
   - '*'
 - apiGroups:
   - gizmodata.com
   resources:
-  - duckdbs/status
+  - gizmosqlservers/status
   verbs:
   - get
+

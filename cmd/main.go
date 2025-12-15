@@ -202,12 +202,12 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err := (&controller.DuckDBReconciler{
+	if err := (&controller.GizmoSQLServerReconciler{
 		Client:   mgr.GetClient(),
 		Scheme:   mgr.GetScheme(),
-		Recorder: mgr.GetEventRecorderFor("duckdb-controller"),
+		Recorder: mgr.GetEventRecorderFor("gizmosqlserver-controller"),
 	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "DuckDB")
+		setupLog.Error(err, "unable to create controller", "controller", "GizmoSQLServer")
 		os.Exit(1)
 	}
 	// +kubebuilder:scaffold:builder

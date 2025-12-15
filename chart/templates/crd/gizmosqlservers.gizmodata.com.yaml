@@ -4,20 +4,20 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.18.0
-  name: duckdbs.gizmodata.com
+  name: gizmosqlservers.gizmodata.com
 spec:
   group: gizmodata.com
   names:
-    kind: DuckDB
-    listKind: DuckDBList
-    plural: duckdbs
-    singular: duckdb
+    kind: GizmoSQLServer
+    listKind: GizmoSQLServerList
+    plural: gizmosqlservers
+    singular: gizmosqlserver
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: DuckDB is the Schema for the duckdbs API.
+        description: GizmoSQLServer is the Schema for the gizmosqlservers API.
         properties:
           apiVersion:
             description: |-
@@ -37,10 +37,11 @@ spec:
           metadata:
             type: object
           spec:
-            description: DuckDBSpec defines the desired state of DuckDB.
+            description: GizmoSQLServerSpec defines the desired state of GizmoSQLServer.
             properties:
               affinity:
-                description: Affinity defines the affinity for the DuckDB instance.
+                description: Affinity defines the affinity for the GizmoSQLServer
+                  instance.
                 properties:
                   nodeAffinity:
                     description: Describes node affinity scheduling rules for the
@@ -706,16 +707,15 @@ spec:
                                   properties:
                                     matchExpressions:
                                       description: matchExpressions is a list of label
-                                        selector requirements. The requirements are
-                                        ANDed.
+                                        selector requirements. The requirements are ANDed.
                                       items:
                                         description: |-
                                           A label selector requirement is a selector that contains values, a key, and an operator that
                                           relates the key and values.
                                         properties:
                                           key:
-                                            description: key is the label key that
-                                              the selector applies to.
+                                            description: key is the label key that the
+                                              selector applies to.
                                             type: string
                                           operator:
                                             description: |-
@@ -973,7 +973,7 @@ spec:
                     x-kubernetes-map-type: atomic
                 type: object
               image:
-                description: Repository and tag of the DuckDB image to use.
+                description: Repository and tag of the GizmoSQLServer image to use.
                 properties:
                   pullPolicy:
                     description: PullPolicy describes a policy for if/when to pull
@@ -987,7 +987,7 @@ spec:
               nodeSelector:
                 additionalProperties:
                   type: string
-                description: NodeSelector defines the node selector for the DuckDB
+                description: NodeSelector defines the node selector for the GizmoSQLServer
                   instance.
                 type: object
               port:
@@ -1055,7 +1055,8 @@ spec:
                     type: object
                 type: object
               tolerations:
-                description: Tolerations defines the tolerations for the DuckDB instance.
+                description: Tolerations defines the tolerations for the GizmoSQLServer
+                  instance.
                 items:
                   description: |-
                     The pod this Toleration is attached to tolerates any taint that matches
@@ -1095,10 +1096,10 @@ spec:
                 type: array
             type: object
           status:
-            description: DuckDBStatus defines the observed state of DuckDB.
+            description: GizmoSQLServerStatus defines the observed state of GizmoSQLServer.
             properties:
               conditions:
-                description: Conditions store the status conditions of the DuckDB
+                description: Conditions store the status conditions of the GizmoSQLServer
                   instances
                 items:
                   description: Condition contains details for one aspect of the current
@@ -1161,3 +1162,4 @@ spec:
     storage: true
     subresources:
       status: {}
+

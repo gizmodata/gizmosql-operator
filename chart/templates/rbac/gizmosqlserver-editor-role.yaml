@@ -5,12 +5,12 @@ metadata:
     labels:
         app.kubernetes.io/managed-by: {{ .Release.Service }}
         app.kubernetes.io/name: gizmosql-operator
-    name: gizmosql-operator-duckdb-editor-role
+    name: gizmosql-operator-gizmosqlserver-editor-role
 rules:
     - apiGroups:
         - gizmodata.com
       resources:
-        - duckdbs
+        - gizmosqlservers
       verbs:
         - create
         - delete
@@ -22,7 +22,8 @@ rules:
     - apiGroups:
         - gizmodata.com
       resources:
-        - duckdbs/status
+        - gizmosqlservers/status
       verbs:
         - get
 {{- end }}
+
