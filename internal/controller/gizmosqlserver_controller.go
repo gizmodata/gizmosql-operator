@@ -40,6 +40,11 @@ import (
 
 const gizmoSQLServerFinalizer = "gizmodata.com/finalizer"
 
+const (
+	gizmoSQLUsernameEnvVar = "GIZMOSQL_USERNAME"
+	gizmoSQLPasswordEnvVar = "GIZMOSQL_PASSWORD"
+)
+
 // Definitions to manage status conditions
 const (
 	// typeAvailableGizmoSQLServer represents the status of the StatefulSet reconciliation
@@ -292,7 +297,7 @@ func (r *GizmoSQLServerReconciler) statefulSetForGizmoSQLServer(
 	if auth.SecretRef.Name != "" {
 		envVars = append(envVars,
 			corev1.EnvVar{
-				Name: "GIZMOSQL_USERNAME",
+				Name: gizmoSQLUsernameEnvVar,
 				ValueFrom: &corev1.EnvVarSource{
 					SecretKeyRef: &corev1.SecretKeySelector{
 						LocalObjectReference: corev1.LocalObjectReference{Name: auth.SecretRef.Name},
@@ -301,7 +306,7 @@ func (r *GizmoSQLServerReconciler) statefulSetForGizmoSQLServer(
 				},
 			},
 			corev1.EnvVar{
-				Name: "GIZMOSQL_PASSWORD",
+				Name: gizmoSQLPasswordEnvVar,
 				ValueFrom: &corev1.EnvVarSource{
 					SecretKeyRef: &corev1.SecretKeySelector{
 						LocalObjectReference: corev1.LocalObjectReference{Name: auth.SecretRef.Name},
@@ -313,11 +318,11 @@ func (r *GizmoSQLServerReconciler) statefulSetForGizmoSQLServer(
 	} else {
 		envVars = append(envVars,
 			corev1.EnvVar{
-				Name:  "GIZMOSQL_USERNAME",
+				Name:  gizmoSQLUsernameEnvVar,
 				Value: "gizmosql_username",
 			},
 			corev1.EnvVar{
-				Name:  "GIZMOSQL_PASSWORD",
+				Name:  gizmoSQLPasswordEnvVar,
 				Value: "gizmosql_password",
 			},
 		)

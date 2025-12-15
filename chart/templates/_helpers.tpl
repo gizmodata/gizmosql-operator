@@ -6,10 +6,10 @@ Truncated to 63 characters for Kubernetes compatibility.
 {{- if .Chart }}
   {{- if .Chart.Name }}
     {{- .Chart.Name | trunc 63 | trimSuffix "-" }}
-  {{- else -}}
+  {{- else }}
     gizmosql-operator
   {{- end }}
-{{- else -}}
+{{- else }}
   gizmosql-operator
 {{- end }}
 {{- end }}

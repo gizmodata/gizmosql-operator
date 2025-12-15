@@ -20,5 +20,3 @@ rules:
       verbs:
         - get
 {{- end }}
-
-
