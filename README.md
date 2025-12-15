@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="logo.svg" alt="gizmosql-operator logo" width="200"/>
-</p>
-
 # ☸️ GizmoSQL Kubernetes Operator
 
 [![DockerHub](https://img.shields.io/badge/dockerhub-image-green.svg?logo=Docker)](https://hub.docker.com/r/gizmodata/gizmosql-operator)
@@ -38,7 +34,7 @@ The **GizmoSQL Operator** is a Kubernetes controller that manages the lifecycle 
 
    ```bash
    git clone https://github.com/gizmodata/gizmosql-operator.git
-   cd operator
+   cd gizmosql-operator
    ```
 
 2. **Install the Chart**
