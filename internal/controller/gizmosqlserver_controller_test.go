@@ -30,7 +30,7 @@ import (
 	v1alpha1 "github.com/gizmodata/gizmosql-operator/api/v1alpha1"
 )
 
-var _ = Describe("DuckDB Controller", func() {
+var _ = Describe("GizmoSQLServer Controller", func() {
 	Context("When reconciling a resource", func() {
 		const resourceName = "test-resource"
 
@@ -40,13 +40,13 @@ var _ = Describe("DuckDB Controller", func() {
 			Name:      resourceName,
 			Namespace: "default", // TODO(user):Modify as needed
 		}
-		duckdb := &v1alpha1.DuckDB{}
+		gizmoSQLServer := &v1alpha1.GizmoSQLServer{}
 
 		BeforeEach(func() {
-			By("creating the custom resource for the Kind DuckDB")
-			err := k8sClient.Get(ctx, typeNamespacedName, duckdb)
+			By("creating the custom resource for the Kind GizmoSQLServer")
+			err := k8sClient.Get(ctx, typeNamespacedName, gizmoSQLServer)
 			if err != nil && errors.IsNotFound(err) {
-				resource := &v1alpha1.DuckDB{
+				resource := &v1alpha1.GizmoSQLServer{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      resourceName,
 						Namespace: "default",
@@ -59,16 +59,16 @@ var _ = Describe("DuckDB Controller", func() {
 
 		AfterEach(func() {
 			// TODO(user): Cleanup logic after each test, like removing the resource instance.
-			resource := &v1alpha1.DuckDB{}
+			resource := &v1alpha1.GizmoSQLServer{}
 			err := k8sClient.Get(ctx, typeNamespacedName, resource)
 			Expect(err).NotTo(HaveOccurred())
 
-			By("Cleanup the specific resource instance DuckDB")
+			By("Cleanup the specific resource instance GizmoSQLServer")
 			Expect(k8sClient.Delete(ctx, resource)).To(Succeed())
 		})
 		It("should successfully reconcile the resource", func() {
 			By("Reconciling the created resource")
-			controllerReconciler := &DuckDBReconciler{
+			controllerReconciler := &GizmoSQLServerReconciler{
 				Client: k8sClient,
 				Scheme: k8sClient.Scheme(),
 			}

@@ -13,7 +13,7 @@ manager:
 
   # Environment variables
   env:
-    - name: DUCKDB_IMAGE
+    - name: GIZMOSQLSERVER_IMAGE
       value: gizmodata/gizmosql:latest
 
   # Pod-level security settings

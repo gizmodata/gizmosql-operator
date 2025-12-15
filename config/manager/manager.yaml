@@ -84,7 +84,7 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 10
         env:
-        - name: DUCKDB_IMAGE
+        - name: GIZMOSQLSERVER_IMAGE
           value: "gizmodata/gizmosql:latest"
         # TODO(user): Configure the resources accordingly based on the project requirements.
         # More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/

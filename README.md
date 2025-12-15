@@ -59,7 +59,7 @@ The **GizmoSQL Operator** is a Kubernetes controller that manages the lifecycle 
 
 ## 📦 Usage
 
-Once the operator is running, you can deploy a GizmoSQL instance by creating a `DuckDB` custom resource.
+Once the operator is running, you can deploy a GizmoSQL instance by creating a `GizmoSQLServer` custom resource.
 
 ### 1. Create a Manifest
 
@@ -67,7 +67,7 @@ Create a file named `gizmosql-instance.yaml`:
 
 ```yaml
 apiVersion: gizmodata.com/v1alpha1
-kind: DuckDB
+kind: GizmoSQLServer
 metadata:
   name: example-gizmosql
   namespace: default

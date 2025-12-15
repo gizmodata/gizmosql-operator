@@ -35,7 +35,7 @@ rules:
     - apiGroups:
         - gizmodata.com
       resources:
-        - duckdbs
+        - gizmosqlservers
       verbs:
         - create
         - delete
@@ -47,13 +47,13 @@ rules:
     - apiGroups:
         - gizmodata.com
       resources:
-        - duckdbs/finalizers
+        - gizmosqlservers/finalizers
       verbs:
         - update
     - apiGroups:
         - gizmodata.com
       resources:
-        - duckdbs/status
+        - gizmosqlservers/status
       verbs:
         - get
         - patch

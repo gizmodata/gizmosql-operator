@@ -22,7 +22,6 @@ resources:
 # default, aiding admins in cluster management. Those roles are
 # not used by the gizmosql-operator itself. You can comment the following lines
 # if you do not want those helpers be installed with your Project.
-- duckdb_admin_role.yaml
-- duckdb_editor_role.yaml
-- duckdb_viewer_role.yaml
-
+- gizmosqlserver_admin_role.yaml
+- gizmosqlserver_editor_role.yaml
+- gizmosqlserver_viewer_role.yaml
