@@ -1,5 +1,5 @@
 apiVersion: v2
-name: gizmosql-operator
+name: gizmosql-operator-chart
 description: A Helm chart to distribute the project gizmosql-operator
 type: application
 version: 0.1.0

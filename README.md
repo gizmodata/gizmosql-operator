@@ -30,29 +30,22 @@ The **GizmoSQL Operator** is a Kubernetes controller that manages the lifecycle 
 
 ### Installation via Helm
 
-1. **Clone the Repository**
-
-   ```bash
-   git clone https://github.com/gizmodata/gizmosql-operator.git
-   cd gizmosql-operator
-   ```
-
-2. **Install the Chart**
+1. **Install the Chart**
 
    Install the operator into the `gizmosql-system` namespace:
 
    ```bash
-   helm install gizmosql-operator ./chart \
+   helm install gizmosql-operator oci://registry-1.docker.io/gizmodata/gizmosql-operator-chart \
      --namespace gizmosql-system \
      --create-namespace
    ```
 
-3. **Verify Installation**
+2. **Verify Installation**
 
-   Ensure the operator pod is running:
+   Wait until the operator pod is running:
 
    ```bash
-   kubectl get pods -n gizmosql-system
+   kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=gizmosql-operator --namespace gizmosql-system
    ```
 
 ---

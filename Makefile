@@ -31,6 +31,8 @@ BUNDLE_METADATA_OPTS ?= $(BUNDLE_CHANNELS) $(BUNDLE_DEFAULT_CHANNEL)
 # gizmodata/gizmosql-operator-bundle:$VERSION and gizmodata/gizmosql-operator-catalog:$VERSION.
 IMAGE_TAG_BASE ?= gizmodata/gizmosql-operator
 
+CHART_REPO ?= oci://registry-1.docker.io/gizmodata
+
 # BUNDLE_IMG defines the image:tag used for the bundle.
 # You can use it as an arg. (E.g make bundle-build BUNDLE_IMG=<some-registry>/<project-name-bundle>:<tag>)
 BUNDLE_IMG ?= $(IMAGE_TAG_BASE)-bundle:v$(VERSION)
@@ -400,15 +402,15 @@ catalog-push: ## Push a catalog image.
 chart-build: ## Build the chart.
 	$(MAKE) kubebuilder
 	@if [ -n "$(OUTPUT_DIR)" ]; then \
-		$(KUBEBUILDER) edit --plugins=helm/v2-alpha --force --output-dir=$(OUTPUT_DIR); \
+		$(KUBEBUILDER) edit --plugins=helm/v2-alpha --output-dir=$(OUTPUT_DIR); \
 	else \
-		$(KUBEBUILDER) edit --plugins=helm/v2-alpha --force --output-dir=.; \
+		$(KUBEBUILDER) edit --plugins=helm/v2-alpha --output-dir=.; \
 	fi
 
 .PHONY: chart-push
 chart-push: ## Push the chart. WIP
 	$(MAKE) helm
 	mkdir -p dist
-	OUTPUT_DIR=dist $(MAKE) chart-build
-	$(HELM) package dist/chart --destination dist
-# $(HELM)  push dist/chart $(CHART_REPO)
+	$(MAKE) chart-build
+	$(HELM) package chart --destination dist
+	$(HELM) push dist/gizmosql-operator-chart-$(VERSION).tgz $(CHART_REPO)

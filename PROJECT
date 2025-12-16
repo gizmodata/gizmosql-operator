@@ -8,7 +8,7 @@ layout:
 plugins:
   helm.kubebuilder.io/v2-alpha:
     manifests: dist/install.yaml
-    output: dist
+    output: .
   manifests.sdk.operatorframework.io/v2: {}
   scorecard.sdk.operatorframework.io/v2: {}
 projectName: gizmosql-operator
