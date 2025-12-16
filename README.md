@@ -114,17 +114,35 @@ The Helm chart can be configured via `values.yaml` or `--set` flags during insta
 
 For developers who want to build and deploy the operator from source:
 
+Download and install [k3d](https://k3d.io/) by following the official instructions. For most platforms, a simple install script is available:
+
+```bash
+curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+```
+
+Create a container registry to push your images to:
+
+```bash
+k3d registry create gizmodata
+```
+
+Create a new cluster with the registry:
+
+```bash
+k3d cluster create --registry-use k3d-gizmodata:63806 gizmodata
+```
+
+
 ```bash
 # Build the docker image
-make docker-build IMG=myregistry/gizmosql-operator:tag
-
-# Push the image
-make docker-push IMG=myregistry/gizmosql-operator:tag
+make docker-build-and-push-dev
 
 # Deploy via Helm with your custom image
-helm install gizmosql-operator ./chart \
-  --set manager.image.repository=myregistry/gizmosql-operator \
-  --set manager.image.tag=tag
+helm upgrade --install gizmosql-operator \
+  --namespace gizmosql-system \
+  --create-namespace ./chart \
+  --set manager.image.repository=k3d-gizmodata:63806/gizmosql-operator \
+  --set manager.image.tag=$(docker images | grep -m1 dev. | awk '{print $2}')
 ```
 
 ---
