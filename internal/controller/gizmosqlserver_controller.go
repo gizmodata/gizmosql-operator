@@ -19,7 +19,6 @@ package controller
 import (
 	"context"
 	"fmt"
-	"os"
 	"time"
 
 	appsv1 "k8s.io/api/apps/v1"
@@ -278,19 +277,15 @@ func (r *GizmoSQLServerReconciler) statefulSetForGizmoSQLServer(
 	// Use the image from Spec if provided, otherwise fallback or error
 	// For now, we assume the user provides valid StatefulSetSpec or at least Image.
 	// If Spec.Spec is empty, we construct a minimal one.
-	image := gizmoSQLServer.Spec.Image.Repository + ":" + gizmoSQLServer.Spec.Image.Tag
-	if gizmoSQLServer.Spec.Image.Repository == "" {
-		// Fallback to a default if not specified? Or error?
-		// Example uses env var.
-		var err error
-		image, err = imageForGizmoSQLServer()
-		if err != nil {
-			// If no env var, and no spec, use a default placeholder or error
-			// return nil, err
-			// Let's use a placeholder for safety if no env var found
-			image = "gizmodata/gizmosql:latest" // Placeholder
-		}
+	repository := gizmoSQLServer.Spec.Image.Repository
+	if repository == "" {
+		repository = "gizmodata/gizmosql"
 	}
+	tag := gizmoSQLServer.Spec.Image.Tag
+	if tag == "" {
+		tag = "latest"
+	}
+	image := repository + ":" + tag
 
 	auth := gizmoSQLServer.Spec.Auth
 	envVars := []corev1.EnvVar{}
@@ -327,6 +322,14 @@ func (r *GizmoSQLServerReconciler) statefulSetForGizmoSQLServer(
 			},
 		)
 	}
+	port := gizmoSQLServer.Spec.Port
+	if port == 0 {
+		port = DefaultGizmoSQLServerPort
+	}
+	healthCheckPort := gizmoSQLServer.Spec.HealthCheckPort
+	if healthCheckPort == 0 {
+		healthCheckPort = DefaultGizmoSQLServerHealthCheckPort
+	}
 
 	statefulSet := &appsv1.StatefulSet{
 		ObjectMeta: metav1.ObjectMeta{
@@ -344,11 +347,35 @@ func (r *GizmoSQLServerReconciler) statefulSetForGizmoSQLServer(
 						Name:            "gizmosqlserver",
 						ImagePullPolicy: gizmoSQLServer.Spec.Image.PullPolicy,
 						Env:             envVars,
-						Ports: []corev1.ContainerPort{{
-							ContainerPort: gizmoSQLServer.Spec.Port,
-							Name:          "gizmosqlserver",
-						}},
+						Ports: []corev1.ContainerPort{
+							{
+								ContainerPort: port,
+								Name:          "gizmosqlserver",
+							},
+							{
+								ContainerPort: healthCheckPort,
+								Name:          "grpc-health",
+							},
+						},
 						Resources: gizmoSQLServer.Spec.Resources,
+						LivenessProbe: &corev1.Probe{
+							ProbeHandler: corev1.ProbeHandler{
+								GRPC: &corev1.GRPCAction{
+									Port: healthCheckPort,
+								},
+							},
+							InitialDelaySeconds: DefaultGizmoSQLServerLivenessProbeInitialDelaySeconds,
+							PeriodSeconds:       DefaultGizmoSQLServerLivenessProbePeriodSeconds,
+						},
+						ReadinessProbe: &corev1.Probe{
+							ProbeHandler: corev1.ProbeHandler{
+								GRPC: &corev1.GRPCAction{
+									Port: healthCheckPort,
+								},
+							},
+							InitialDelaySeconds: DefaultGizmoSQLServerReadinessProbeInitialDelaySeconds,
+							PeriodSeconds:       DefaultGizmoSQLServerReadinessProbePeriodSeconds,
+						},
 					}},
 					Affinity:     gizmoSQLServer.Spec.Affinity,
 					NodeSelector: gizmoSQLServer.Spec.NodeSelector,
@@ -376,17 +403,6 @@ func labelsForGizmoSQLServer(name string) map[string]string {
 		"app.kubernetes.io/instance":   name,
 		"app.kubernetes.io/managed-by": "GizmoSQLServerController",
 	}
-}
-
-// imageForGizmoSQLServer gets the Operand image which is managed by this controller
-// from the GIZMOSQLSERVER_IMAGE environment variable defined in the config/manager/manager.yaml
-func imageForGizmoSQLServer() (string, error) {
-	var imageEnvVar = "GIZMOSQLSERVER_IMAGE"
-	image, found := os.LookupEnv(imageEnvVar)
-	if !found {
-		return "", fmt.Errorf("unable to find %s environment variable with the image", imageEnvVar)
-	}
-	return image, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.

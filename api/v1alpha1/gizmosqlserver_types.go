@@ -36,6 +36,10 @@ type GizmoSQLServerSpec struct {
 	// +optional
 	Port int32 `json:"port,omitempty" default:"31337"`
 
+	// HealthCheckPort defines the port to expose for health check. Default is typically 31338 or similar for gizmosql.
+	// +optional
+	HealthCheckPort int32 `json:"healthCheckPort,omitempty" default:"31338"`
+
 	// Authentication configuration. If no secretRef is provided, the GizmoSQLServer will use a default username of "gizmosql_username" and password of "gizmosql_password".
 	Auth GizmoSQLServerAuth `json:"auth,omitempty"`
 

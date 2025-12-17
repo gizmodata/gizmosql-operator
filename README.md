@@ -65,10 +65,6 @@ metadata:
   name: example-gizmosql
   namespace: default
 spec:
-  image:
-    repository: gizmodata/gizmosql
-    tag: latest
-  port: 31337
   resources:
     limits:
       cpu: "1"
