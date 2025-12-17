@@ -13,6 +13,3 @@ subjects:
 - kind: ServiceAccount
   name: controller-manager
   namespace: system
-- kind: ServiceAccount
-  name: gizmosql-operator-controller-manager
-  namespace: gizmosql-operator-system
