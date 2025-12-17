@@ -19,7 +19,6 @@ package controller
 import (
 	"context"
 	"fmt"
-	"os"
 	"time"
 
 	appsv1 "k8s.io/api/apps/v1"
@@ -404,17 +403,6 @@ func labelsForGizmoSQLServer(name string) map[string]string {
 		"app.kubernetes.io/instance":   name,
 		"app.kubernetes.io/managed-by": "GizmoSQLServerController",
 	}
-}
-
-// imageForGizmoSQLServer gets the Operand image which is managed by this controller
-// from the GIZMOSQLSERVER_IMAGE environment variable defined in the config/manager/manager.yaml
-func imageForGizmoSQLServer() (string, error) {
-	var imageEnvVar = "GIZMOSQLSERVER_IMAGE"
-	image, found := os.LookupEnv(imageEnvVar)
-	if !found {
-		return "", fmt.Errorf("unable to find %s environment variable with the image", imageEnvVar)
-	}
-	return image, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.
