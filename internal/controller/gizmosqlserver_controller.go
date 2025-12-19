@@ -248,6 +248,10 @@ func (r *GizmoSQLServerReconciler) doFinalizerOperationsForGizmoSQLServer(cr *v1
 }
 
 func (r *GizmoSQLServerReconciler) serviceForGizmoSQLServer(gizmoSQLServer *v1alpha1.GizmoSQLServer) (*corev1.Service, error) {
+	port := gizmoSQLServer.Spec.Port
+	if port == 0 {
+		port = DefaultGizmoSQLServerPort
+	}
 	service := &corev1.Service{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      gizmoSQLServer.Name,
@@ -257,7 +261,7 @@ func (r *GizmoSQLServerReconciler) serviceForGizmoSQLServer(gizmoSQLServer *v1al
 		Spec: corev1.ServiceSpec{
 			Selector: labelsForGizmoSQLServer(gizmoSQLServer.Name),
 			Ports: []corev1.ServicePort{{
-				Port: gizmoSQLServer.Spec.Port,
+				Port: port,
 				Name: "gizmosqlserver",
 			}},
 		},
