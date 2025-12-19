@@ -313,7 +313,7 @@ var _ = Describe("Manager", Ordered, func() {
 				if err == nil {
 					g.Expect(output).To(BeEmpty())
 				} else {
-					g.Expect(string(output)).Should(Or(ContainSubstring("NotFound"), BeEmpty()))
+					g.Expect(output).Should(Or(ContainSubstring("NotFound"), BeEmpty()))
 				}
 			}, 60*time.Second, 3*time.Second).Should(Succeed())
 
