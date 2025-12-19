@@ -1,0 +1,13 @@
+apiVersion: gizmodata.com/v1alpha1
+kind: GizmoSQLServer
+metadata:
+  name: e2e-gizmosql
+  namespace: default
+spec:
+  resources:
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+    requests:
+      cpu: "250m"
+      memory: "256Mi"
