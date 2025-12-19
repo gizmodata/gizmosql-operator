@@ -256,16 +256,71 @@ var _ = Describe("Manager", Ordered, func() {
 			))
 		})
 
-		// +kubebuilder:scaffold:e2e-webhooks-checks
+		It("should create a GizmoSQLServer CR and observe the corresponding Pod and Service", func() {
+			gizmoName := "e2e-gizmosql"
+			gizmoNs := "default"
+			manifestPath := filepath.Join("test", "testdata", "gizmosql.yaml")
 
-		// TODO: Customize the e2e test suite with scenarios specific to your project.
-		// Consider applying sample/CR(s) and check their status and/or verifying
-		// the reconciliation by using the metrics, i.e.:
-		// metricsOutput := getMetricsOutput()
-		// Expect(metricsOutput).To(ContainSubstring(
-		//    fmt.Sprintf(`controller_runtime_reconcile_total{controller="%s",result="success"} 1`,
-		//    strings.ToLower(<Kind>),
-		// ))
+			By("creating namespace for test")
+			cmd := exec.Command("kubectl", "create", "ns", gizmoNs)
+			_, _ = utils.Run(cmd) // Ignore error if it already exists
+
+			By("applying the GizmoSQLServer manifest")
+			cmd = exec.Command("kubectl", "apply", "-f", manifestPath)
+			_, err := utils.Run(cmd)
+			Expect(err).NotTo(HaveOccurred(), "Failed to apply GizmoSQLServer manifest")
+
+			By("eventually seeing a Pod for GizmoSQLServer becomes ready")
+			Eventually(func(g Gomega) {
+				cmd = exec.Command(
+					"kubectl", "wait",
+					"--for=condition=ready",
+					"pod",
+					"-l", fmt.Sprintf("app.kubernetes.io/instance=%s", gizmoName),
+					"-n", gizmoNs,
+				)
+				output, err := utils.Run(cmd)
+				g.Expect(err).NotTo(HaveOccurred())
+				g.Expect(output).To(Or(ContainSubstring("condition met")), "Pod is not running/succeeded")
+			}, 3*time.Minute, 5*time.Second).Should(Succeed())
+
+			By("verifying the Service for GizmoSQLServer exists")
+			Eventually(func(g Gomega) {
+				cmd = exec.Command(
+					"kubectl", "get", "svc", gizmoName,
+					"-n", gizmoNs,
+					"-o", "jsonpath={.metadata.name}",
+				)
+				output, err := utils.Run(cmd)
+				g.Expect(err).NotTo(HaveOccurred())
+				g.Expect(output).To(Equal(gizmoName))
+			}, 30*time.Second, 3*time.Second).Should(Succeed())
+
+			By("deleting the GizmoSQLServer CR")
+			cmd = exec.Command("kubectl", "delete", "gizmosqlserver", gizmoName, "-n", gizmoNs)
+			_, err = utils.Run(cmd)
+			Expect(err).NotTo(HaveOccurred(), "Failed to delete GizmoSQLServer CR")
+
+			By("eventually seeing the Pods are deleted")
+			Eventually(func(g Gomega) {
+				cmd = exec.Command("kubectl", "get", "pods",
+					"-l", fmt.Sprintf("app.kubernetes.io/instance=%s", gizmoName),
+					"-n", gizmoNs,
+					"-o", "name",
+				)
+				output, err := utils.Run(cmd)
+				// If pods are deleted, cmd should succeed but output is empty, or command error with not found is ok
+				if err == nil {
+					g.Expect(output).To(BeEmpty())
+				} else {
+					g.Expect(output).Should(Or(ContainSubstring("NotFound"), BeEmpty()))
+				}
+			}, 60*time.Second, 3*time.Second).Should(Succeed())
+
+			By("deleting the test namespace")
+			cmd = exec.Command("kubectl", "delete", "ns", gizmoNs)
+			_, _ = utils.Run(cmd)
+		})
 	})
 })
 
