@@ -1,7 +1,7 @@
 # Configure the controller manager deployment
 manager:
   replicas: 1
-  
+
   image:
     repository: gizmodata/gizmosql-operator
     tag: 0.1.0
@@ -68,4 +68,3 @@ certManager:
 # Requires prometheus-operator to be installed in the cluster.
 prometheus:
   enable: false
-

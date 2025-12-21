@@ -25,4 +25,3 @@ rules:
   - gizmosqlservers/status
   verbs:
   - get
-
