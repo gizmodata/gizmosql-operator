@@ -42,7 +42,7 @@ jobs:
       - name: Build Helm Chart
         run: |
           OUTPUT_DIR=dist make chart-build
-      
+
       - name: Verify Helm installation
         run: helm version
 

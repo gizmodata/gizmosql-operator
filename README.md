@@ -157,7 +157,7 @@ https://www.apache.org/licenses/LICENSE-2.0
 
 Questions or consulting needs?
 
-📧 info@gizmodata.com  
+📧 info@gizmodata.com
 🌐 [https://gizmodata.com](https://gizmodata.com)
 
 ---

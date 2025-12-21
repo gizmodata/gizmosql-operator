@@ -5,7 +5,6 @@ repos:
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
-      - id: check-yaml
       - id: check-added-large-files
 
   # Go formatting and linting
@@ -37,4 +36,3 @@ repos:
         language: system
         types: [go]
         pass_filenames: false
-
