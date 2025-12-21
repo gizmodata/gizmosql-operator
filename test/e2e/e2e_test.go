@@ -317,6 +317,14 @@ var _ = Describe("Manager", Ordered, func() {
 				}
 			}, 60*time.Second, 3*time.Second).Should(Succeed())
 
+			By("checking the Service for GizmoSQLServer is deleted")
+			Eventually(func(g Gomega) {
+				cmd = exec.Command("kubectl", "get", "svc", gizmoName, "-n", gizmoNs)
+				output, err := utils.Run(cmd)
+				g.Expect(err).To(HaveOccurred())
+				g.Expect(output).To(ContainSubstring("NotFound"))
+			}, 60*time.Second, 3*time.Second).Should(Succeed())
+
 			By("deleting the test namespace")
 			cmd = exec.Command("kubectl", "delete", "ns", gizmoNs)
 			_, _ = utils.Run(cmd)
