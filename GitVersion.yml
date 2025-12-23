@@ -1,0 +1,35 @@
+mode: Mainline
+next-version: 0.1.0
+branches:
+  main:
+    regex: ^main$
+    mode: ContinuousDeployment
+    tag: ''
+    increment: Patch
+    prevent-increment-of-merged-branch-version: false
+    track-merge-target: false
+    is-mainline: true
+  feature:
+    regex: ^features?[/-]
+    mode: ContinuousDelivery
+    tag: alpha
+    increment: Minor
+  bugfix:
+    regex: ^bugfix(es)?[/-]
+    mode: ContinuousDelivery
+    tag: beta
+    increment: Patch
+  release:
+    regex: ^releases?[/-]
+    mode: ContinuousDelivery
+    tag: rc
+    increment: None
+    is-release-branch: true
+  pull-request:
+    regex: ^(pull|pull\-requests|pr)[/-]
+    mode: ContinuousDelivery
+    tag: pr
+    increment: Inherit
+ignore:
+  sha: []
+merge-message-formats: {}
