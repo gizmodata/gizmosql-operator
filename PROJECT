@@ -23,4 +23,13 @@ resources:
   kind: GizmoSQLServer
   path: github.com/gizmodata/gizmosql-operator/api/v1alpha1
   version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: gizmodata.com
+  group: engines
+  kind: GizmoSQLServerCluster
+  path: github.com/gizmodata/gizmosql-operator/api/v1alpha1
+  version: v1alpha1
 version: "3"
