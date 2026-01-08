@@ -55,6 +55,9 @@ const (
 // +kubebuilder:rbac:groups=gizmodata.com,resources=gizmosqlserverclusters,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=gizmodata.com,resources=gizmosqlserverclusters/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=gizmodata.com,resources=gizmosqlserverclusters/finalizers,verbs=update
+// +kubebuilder:rbac:groups=core,resources=events,verbs=create;patch
+// +kubebuilder:rbac:groups=core,resources=services,verbs=list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=apps,resources=deployments,verbs=list;watch;create;update;patch;delete
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -68,7 +71,7 @@ const (
 func (r *GizmoSQLServerClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := logf.FromContext(ctx)
 
-	// Fetch the GizmoSQLServer instance
+	// Fetch the GizmoSQLServerCluster instance
 	gizmoSQLServerCluster := &v1alpha1.GizmoSQLServerCluster{}
 	err := r.Get(ctx, req.NamespacedName, gizmoSQLServerCluster)
 	if err != nil {
@@ -84,22 +87,22 @@ func (r *GizmoSQLServerClusterReconciler) Reconcile(ctx context.Context, req ctr
 	if len(gizmoSQLServerCluster.Status.Conditions) == 0 {
 		meta.SetStatusCondition(&gizmoSQLServerCluster.Status.Conditions, metav1.Condition{Type: typeAvailableGizmoSQLServerCluster, Status: metav1.ConditionUnknown, Reason: "Reconciling", Message: "Starting reconciliation"})
 		if err = r.Status().Update(ctx, gizmoSQLServerCluster); err != nil {
-			log.Error(err, "Failed to update GizmoSQLServer status")
+			log.Error(err, "Failed to update GizmoSQLServerCluster status")
 			return ctrl.Result{}, err
 		}
 
 		if err := r.Get(ctx, req.NamespacedName, gizmoSQLServerCluster); err != nil {
-			log.Error(err, "Failed to re-fetch gizmosqlserver")
+			log.Error(err, "Failed to re-fetch gizmosqlservercluster")
 			return ctrl.Result{}, err
 		}
 	}
 
 	// Add finalizer
 	if !controllerutil.ContainsFinalizer(gizmoSQLServerCluster, GizmoSQLServerClusterFinalizer) {
-		log.Info("Adding Finalizer for GizmoSQLServer")
+		log.Info("Adding Finalizer for GizmoSQLServerCluster")
 		if ok := controllerutil.AddFinalizer(gizmoSQLServerCluster, GizmoSQLServerClusterFinalizer); !ok {
 			err = fmt.Errorf("finalizer for GizmoSQLServerCluster was not added")
-			log.Error(err, "Failed to add finalizer for GizmoSQLServer")
+			log.Error(err, "Failed to add finalizer for GizmoSQLServerCluster")
 			return ctrl.Result{}, err
 		}
 
@@ -112,14 +115,14 @@ func (r *GizmoSQLServerClusterReconciler) Reconcile(ctx context.Context, req ctr
 	isGizmoSQLServerClusterMarkedToBeDeleted := gizmoSQLServerCluster.GetDeletionTimestamp() != nil
 	if isGizmoSQLServerClusterMarkedToBeDeleted {
 		if controllerutil.ContainsFinalizer(gizmoSQLServerCluster, GizmoSQLServerClusterFinalizer) {
-			log.Info("Performing Finalizer Operations for GizmoSQLServer before delete CR")
+			log.Info("Performing Finalizer Operations for GizmoSQLServerCluster before delete CR")
 
 			meta.SetStatusCondition(&gizmoSQLServerCluster.Status.Conditions, metav1.Condition{Type: typeDegradedGizmoSQLServerCluster,
 				Status: metav1.ConditionUnknown, Reason: "Finalizing",
 				Message: fmt.Sprintf("Performing finalizer operations for the custom resource: %s ", gizmoSQLServerCluster.Name)})
 
 			if err := r.Status().Update(ctx, gizmoSQLServerCluster); err != nil {
-				log.Error(err, "Failed to update GizmoSQLServer status")
+				log.Error(err, "Failed to update GizmoSQLServerCluster status")
 				return ctrl.Result{}, err
 			}
 

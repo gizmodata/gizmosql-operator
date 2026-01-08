@@ -24,6 +24,7 @@ rules:
     - apiGroups:
         - apps
       resources:
+        - deployments
         - statefulsets
       verbs:
         - create
@@ -36,31 +37,6 @@ rules:
         - gizmodata.com
       resources:
         - gizmosqlserverclusters
-      verbs:
-        - create
-        - delete
-        - get
-        - list
-        - patch
-        - update
-        - watch
-    - apiGroups:
-        - gizmodata.com
-      resources:
-        - gizmosqlserverclusters/finalizers
-      verbs:
-        - update
-    - apiGroups:
-        - gizmodata.com
-      resources:
-        - gizmosqlserverclusters/status
-      verbs:
-        - get
-        - patch
-        - update
-    - apiGroups:
-        - gizmodata.com
-      resources:
         - gizmosqlservers
       verbs:
         - create
@@ -73,12 +49,14 @@ rules:
     - apiGroups:
         - gizmodata.com
       resources:
+        - gizmosqlserverclusters/finalizers
         - gizmosqlservers/finalizers
       verbs:
         - update
     - apiGroups:
         - gizmodata.com
       resources:
+        - gizmosqlserverclusters/status
         - gizmosqlservers/status
       verbs:
         - get
