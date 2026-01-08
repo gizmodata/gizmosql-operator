@@ -211,8 +211,9 @@ func main() {
 		os.Exit(1)
 	}
 	if err := (&controller.GizmoSQLServerClusterReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
+		Client:   mgr.GetClient(),
+		Scheme:   mgr.GetScheme(),
+		Recorder: mgr.GetEventRecorderFor("gizmosqlservercluster-controller"),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "GizmoSQLServerCluster")
 		os.Exit(1)

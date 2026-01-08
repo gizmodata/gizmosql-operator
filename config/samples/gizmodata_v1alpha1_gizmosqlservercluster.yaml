@@ -5,5 +5,17 @@ metadata:
     app.kubernetes.io/name: gizmosql-operator
     app.kubernetes.io/managed-by: kustomize
   name: gizmosqlservercluster-sample
+  namespace: default
 spec:
-  # TODO(user): Add fields here
+  serverSpec:
+    image:
+      repository: gizmodata/gizmosql
+      tag: latest
+    resources:
+      limits:
+        cpu: "1"
+        memory: "2Gi"
+      requests:
+        cpu: "500m"
+        memory: "1Gi"
+  replicas: 3

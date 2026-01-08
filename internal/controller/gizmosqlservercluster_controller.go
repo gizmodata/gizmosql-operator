@@ -253,9 +253,15 @@ func (r *GizmoSQLServerClusterReconciler) deploymentForGizmoSQLServerCluster(giz
 			Namespace: gizmoSQLServerCluster.Namespace,
 		},
 		Spec: appsv1.DeploymentSpec{
+			Selector: &metav1.LabelSelector{
+				MatchLabels: DefaultLabelsForGizmoSQLServer(gizmoSQLServerCluster.Name),
+			},
 			Replicas: gizmoSQLServerCluster.Spec.Replicas,
 			Template: corev1.PodTemplateSpec{
 				Spec: *PodSpecFromGizmoSQLServerSpec(&gizmoSQLServerCluster.Spec.ServerSpec),
+				ObjectMeta: metav1.ObjectMeta{
+					Labels: DefaultLabelsForGizmoSQLServer(gizmoSQLServerCluster.Name),
+				},
 			},
 		},
 	}
