@@ -3,6 +3,7 @@
 # It should be run by config/default
 resources:
 - bases/gizmodata.com_gizmosqlservers.yaml
+- bases/gizmodata.com_gizmosqlserverclusters.yaml
 # +kubebuilder:scaffold:crdkustomizeresource
 
 patches:

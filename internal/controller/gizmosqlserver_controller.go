@@ -37,8 +37,6 @@ import (
 	v1alpha1 "github.com/gizmodata/gizmosql-operator/api/v1alpha1"
 )
 
-const gizmoSQLServerFinalizer = "gizmodata.com/finalizer"
-
 const (
 	gizmoSQLUsernameEnvVar = "GIZMOSQL_USERNAME"
 	gizmoSQLPasswordEnvVar = "GIZMOSQL_PASSWORD"
@@ -98,9 +96,9 @@ func (r *GizmoSQLServerReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 	}
 
 	// Add finalizer
-	if !controllerutil.ContainsFinalizer(gizmoSQLServer, gizmoSQLServerFinalizer) {
+	if !controllerutil.ContainsFinalizer(gizmoSQLServer, GizmoSQLServerClusterFinalizer) {
 		log.Info("Adding Finalizer for GizmoSQLServer")
-		if ok := controllerutil.AddFinalizer(gizmoSQLServer, gizmoSQLServerFinalizer); !ok {
+		if ok := controllerutil.AddFinalizer(gizmoSQLServer, GizmoSQLServerClusterFinalizer); !ok {
 			err = fmt.Errorf("finalizer for GizmoSQLServer was not added")
 			log.Error(err, "Failed to add finalizer for GizmoSQLServer")
 			return ctrl.Result{}, err
@@ -115,7 +113,7 @@ func (r *GizmoSQLServerReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 	// Check if the GizmoSQLServer instance is marked to be deleted
 	isGizmoSQLServerMarkedToBeDeleted := gizmoSQLServer.GetDeletionTimestamp() != nil
 	if isGizmoSQLServerMarkedToBeDeleted {
-		if controllerutil.ContainsFinalizer(gizmoSQLServer, gizmoSQLServerFinalizer) {
+		if controllerutil.ContainsFinalizer(gizmoSQLServer, GizmoSQLServerClusterFinalizer) {
 			log.Info("Performing Finalizer Operations for GizmoSQLServer before delete CR")
 
 			meta.SetStatusCondition(&gizmoSQLServer.Status.Conditions, metav1.Condition{Type: typeDegradedGizmoSQLServer,
@@ -144,7 +142,7 @@ func (r *GizmoSQLServerReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 			}
 
 			log.Info("Removing Finalizer for GizmoSQLServer")
-			if ok := controllerutil.RemoveFinalizer(gizmoSQLServer, gizmoSQLServerFinalizer); !ok {
+			if ok := controllerutil.RemoveFinalizer(gizmoSQLServer, GizmoSQLServerClusterFinalizer); !ok {
 				err = fmt.Errorf("finalizer for GizmoSQLServer was not removed")
 				log.Error(err, "Failed to remove finalizer for GizmoSQLServer")
 				return ctrl.Result{}, err
@@ -189,9 +187,9 @@ func (r *GizmoSQLServerReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 	err = r.Get(ctx, types.NamespacedName{Name: gizmoSQLServer.Name, Namespace: gizmoSQLServer.Namespace}, foundService)
 	if err != nil && apierrors.IsNotFound(err) {
 		// Define a new Service
-		service, err := r.serviceForGizmoSQLServer(gizmoSQLServer)
-		if err != nil {
-			log.Error(err, "Failed to define new Service resource for GizmoSQLServer")
+		service := ServiceForGizmoSQLServerSpect(gizmoSQLServer.Name, gizmoSQLServer.Namespace, &gizmoSQLServer.Spec)
+		if err := ctrl.SetControllerReference(gizmoSQLServer, service, r.Scheme); err != nil {
+			log.Error(err, "Failed to set controller reference for Service")
 			return ctrl.Result{}, err
 		}
 
@@ -215,7 +213,7 @@ func (r *GizmoSQLServerReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 	statefulSetList := &appsv1.StatefulSetList{}
 	listOpts := []client.ListOption{
 		client.InNamespace(gizmoSQLServer.Namespace),
-		client.MatchingLabels(labelsForGizmoSQLServer(gizmoSQLServer.Name)),
+		client.MatchingLabels(DefaultLabelsForGizmoSQLServer(gizmoSQLServer.Name)),
 	}
 	if err = r.List(ctx, statefulSetList, listOpts...); err != nil {
 		log.Error(err, "Failed to list StatefulSets", "GizmoSQLServer.Namespace", gizmoSQLServer.Namespace, "GizmoSQLServer.Name", gizmoSQLServer.Name)
@@ -247,93 +245,10 @@ func (r *GizmoSQLServerReconciler) doFinalizerOperationsForGizmoSQLServer(cr *v1
 			cr.Namespace))
 }
 
-func (r *GizmoSQLServerReconciler) serviceForGizmoSQLServer(gizmoSQLServer *v1alpha1.GizmoSQLServer) (*corev1.Service, error) {
-	port := gizmoSQLServer.Spec.Port
-	if port == 0 {
-		port = DefaultGizmoSQLServerPort
-	}
-	service := &corev1.Service{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      gizmoSQLServer.Name,
-			Namespace: gizmoSQLServer.Namespace,
-			Labels:    labelsForGizmoSQLServer(gizmoSQLServer.Name),
-		},
-		Spec: corev1.ServiceSpec{
-			Selector: labelsForGizmoSQLServer(gizmoSQLServer.Name),
-			Ports: []corev1.ServicePort{{
-				Port: port,
-				Name: "gizmosqlserver",
-			}},
-		},
-	}
-
-	// Set the ownerRef for the Service
-	if err := ctrl.SetControllerReference(gizmoSQLServer, service, r.Scheme); err != nil {
-		return nil, err
-	}
-
-	return service, nil
-}
-
 // statefulSetForGizmoSQLServer returns a GizmoSQLServer StatefulSet object
 func (r *GizmoSQLServerReconciler) statefulSetForGizmoSQLServer(
 	gizmoSQLServer *v1alpha1.GizmoSQLServer) (*appsv1.StatefulSet, error) {
-	// Use the image from Spec if provided, otherwise fallback or error
-	// For now, we assume the user provides valid StatefulSetSpec or at least Image.
-	// If Spec.Spec is empty, we construct a minimal one.
-	repository := gizmoSQLServer.Spec.Image.Repository
-	if repository == "" {
-		repository = "gizmodata/gizmosql"
-	}
-	tag := gizmoSQLServer.Spec.Image.Tag
-	if tag == "" {
-		tag = "latest"
-	}
-	image := repository + ":" + tag
-
-	auth := gizmoSQLServer.Spec.Auth
-	envVars := []corev1.EnvVar{}
-	if auth.SecretRef.Name != "" {
-		envVars = append(envVars,
-			corev1.EnvVar{
-				Name: gizmoSQLUsernameEnvVar,
-				ValueFrom: &corev1.EnvVarSource{
-					SecretKeyRef: &corev1.SecretKeySelector{
-						LocalObjectReference: corev1.LocalObjectReference{Name: auth.SecretRef.Name},
-						Key:                  auth.UsernameKey,
-					},
-				},
-			},
-			corev1.EnvVar{
-				Name: gizmoSQLPasswordEnvVar,
-				ValueFrom: &corev1.EnvVarSource{
-					SecretKeyRef: &corev1.SecretKeySelector{
-						LocalObjectReference: corev1.LocalObjectReference{Name: auth.SecretRef.Name},
-						Key:                  auth.PasswordKey,
-					},
-				},
-			},
-		)
-	} else {
-		envVars = append(envVars,
-			corev1.EnvVar{
-				Name:  gizmoSQLUsernameEnvVar,
-				Value: "gizmosql_username",
-			},
-			corev1.EnvVar{
-				Name:  gizmoSQLPasswordEnvVar,
-				Value: "gizmosql_password",
-			},
-		)
-	}
-	port := gizmoSQLServer.Spec.Port
-	if port == 0 {
-		port = DefaultGizmoSQLServerPort
-	}
-	healthCheckPort := gizmoSQLServer.Spec.HealthCheckPort
-	if healthCheckPort == 0 {
-		healthCheckPort = DefaultGizmoSQLServerHealthCheckPort
-	}
+	podSpec := PodSpecFromGizmoSQLServerSpec(&gizmoSQLServer.Spec)
 
 	statefulSet := &appsv1.StatefulSet{
 		ObjectMeta: metav1.ObjectMeta{
@@ -342,51 +257,12 @@ func (r *GizmoSQLServerReconciler) statefulSetForGizmoSQLServer(
 		},
 		Spec: appsv1.StatefulSetSpec{
 			Selector: &metav1.LabelSelector{
-				MatchLabels: labelsForGizmoSQLServer(gizmoSQLServer.Name),
+				MatchLabels: DefaultLabelsForGizmoSQLServer(gizmoSQLServer.Name),
 			},
 			Template: corev1.PodTemplateSpec{
-				Spec: corev1.PodSpec{
-					Containers: []corev1.Container{{
-						Image:           image,
-						Name:            "gizmosqlserver",
-						ImagePullPolicy: gizmoSQLServer.Spec.Image.PullPolicy,
-						Env:             envVars,
-						Ports: []corev1.ContainerPort{
-							{
-								ContainerPort: port,
-								Name:          "gizmosqlserver",
-							},
-							{
-								ContainerPort: healthCheckPort,
-								Name:          "grpc-health",
-							},
-						},
-						Resources: gizmoSQLServer.Spec.Resources,
-						LivenessProbe: &corev1.Probe{
-							ProbeHandler: corev1.ProbeHandler{
-								GRPC: &corev1.GRPCAction{
-									Port: healthCheckPort,
-								},
-							},
-							InitialDelaySeconds: DefaultGizmoSQLServerLivenessProbeInitialDelaySeconds,
-							PeriodSeconds:       DefaultGizmoSQLServerLivenessProbePeriodSeconds,
-						},
-						ReadinessProbe: &corev1.Probe{
-							ProbeHandler: corev1.ProbeHandler{
-								GRPC: &corev1.GRPCAction{
-									Port: healthCheckPort,
-								},
-							},
-							InitialDelaySeconds: DefaultGizmoSQLServerReadinessProbeInitialDelaySeconds,
-							PeriodSeconds:       DefaultGizmoSQLServerReadinessProbePeriodSeconds,
-						},
-					}},
-					Affinity:     gizmoSQLServer.Spec.Affinity,
-					NodeSelector: gizmoSQLServer.Spec.NodeSelector,
-					Tolerations:  gizmoSQLServer.Spec.Tolerations,
-				},
+				Spec: *podSpec,
 				ObjectMeta: metav1.ObjectMeta{
-					Labels: labelsForGizmoSQLServer(gizmoSQLServer.Name),
+					Labels: DefaultLabelsForGizmoSQLServer(gizmoSQLServer.Name),
 				},
 			},
 			ServiceName: gizmoSQLServer.Name,
@@ -398,15 +274,6 @@ func (r *GizmoSQLServerReconciler) statefulSetForGizmoSQLServer(
 		return nil, err
 	}
 	return statefulSet, nil
-}
-
-// labelsForGizmoSQLServer returns the labels for selecting the resources
-func labelsForGizmoSQLServer(name string) map[string]string {
-	return map[string]string{
-		"app.kubernetes.io/name":       "gizmosqlserver",
-		"app.kubernetes.io/instance":   name,
-		"app.kubernetes.io/managed-by": "GizmoSQLServerController",
-	}
 }
 
 // SetupWithManager sets up the controller with the Manager.

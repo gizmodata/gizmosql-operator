@@ -16,6 +16,7 @@ limitations under the License.
 package controller
 
 const (
+	DefaultGizmoSQLServicePortName       = "gizmosqlserver"
 	DefaultGizmoSQLServerPort            = 31337
 	DefaultGizmoSQLServerHealthCheckPort = 31338
 
@@ -26,4 +27,15 @@ const (
 	// Readiness probe configuration
 	DefaultGizmoSQLServerReadinessProbeInitialDelaySeconds = 1
 	DefaultGizmoSQLServerReadinessProbePeriodSeconds       = 5
+
+	DefaultGizmoSQLServerImageRepository = "gizmodata/gizmosql"
+	DefaultGizmoSQLServerImageTag        = "latest"
+
+	DefaultGizmoSQLServerHealthCheckPortName = "grpc-health"
+	DefaultGizmoSQLServerContainerName       = "gizmosqlserver"
+
+	DefaultGizmoSQLServerControllerName = "gizmosqlserver-controller"
+	DefaultGizmoSQLServerName           = "gizmosqlserver"
+
+	GizmoSQLServerClusterFinalizer = "gizmodata.com/finalizer"
 )
