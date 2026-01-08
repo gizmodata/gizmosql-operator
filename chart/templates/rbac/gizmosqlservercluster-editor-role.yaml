@@ -8,7 +8,7 @@ metadata:
     name: gizmosql-operator-gizmosqlservercluster-editor-role
 rules:
     - apiGroups:
-        - engines.gizmodata.com
+        - gizmodata.com
       resources:
         - gizmosqlserverclusters
       verbs:
@@ -20,7 +20,7 @@ rules:
         - update
         - watch
     - apiGroups:
-        - engines.gizmodata.com
+        - gizmodata.com
       resources:
         - gizmosqlserverclusters/status
       verbs:

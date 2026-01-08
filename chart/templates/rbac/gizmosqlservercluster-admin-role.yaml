@@ -8,13 +8,13 @@ metadata:
     name: gizmosql-operator-gizmosqlservercluster-admin-role
 rules:
     - apiGroups:
-        - engines.gizmodata.com
+        - gizmodata.com
       resources:
         - gizmosqlserverclusters
       verbs:
         - '*'
     - apiGroups:
-        - engines.gizmodata.com
+        - gizmodata.com
       resources:
         - gizmosqlserverclusters/status
       verbs:

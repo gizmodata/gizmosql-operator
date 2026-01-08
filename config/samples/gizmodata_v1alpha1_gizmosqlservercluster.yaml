@@ -1,4 +1,4 @@
-apiVersion: engines.gizmodata.com/v1alpha1
+apiVersion: gizmodata.com/v1alpha1
 kind: GizmoSQLServerCluster
 metadata:
   labels:

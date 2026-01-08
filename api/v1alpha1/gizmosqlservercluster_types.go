@@ -27,9 +27,11 @@ import (
 
 // GizmoSQLServerClusterSpec defines the desired state of GizmoSQLServerCluster
 type GizmoSQLServerClusterSpec struct {
+	ServerSpec GizmoSQLServerSpec `json:"serverSpec,omitempty"`
+
 	HorizontalPodAutoscaler *autoscalingv2.HorizontalPodAutoscaler `json:"horizontalPodAutoscaler,omitempty"`
 
-	Replicas int32 `json:"replicas,omitempty"`
+	Replicas *int32 `json:"replicas,omitempty"`
 
 	PersistentVolumeClaim *corev1.PersistentVolumeClaim `json:"persistentVolumeClaim,omitempty"`
 }

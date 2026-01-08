@@ -34,34 +34,9 @@ rules:
   - update
   - watch
 - apiGroups:
-  - engines.gizmodata.com
-  resources:
-  - gizmosqlserverclusters
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - engines.gizmodata.com
-  resources:
-  - gizmosqlserverclusters/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - engines.gizmodata.com
-  resources:
-  - gizmosqlserverclusters/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
   - gizmodata.com
   resources:
+  - gizmosqlserverclusters
   - gizmosqlservers
   verbs:
   - create
@@ -74,12 +49,14 @@ rules:
 - apiGroups:
   - gizmodata.com
   resources:
+  - gizmosqlserverclusters/finalizers
   - gizmosqlservers/finalizers
   verbs:
   - update
 - apiGroups:
   - gizmodata.com
   resources:
+  - gizmosqlserverclusters/status
   - gizmosqlservers/status
   verbs:
   - get
